@@ -5,6 +5,9 @@ import threading
 import time
 import queue
 
+index=0
+idx=0
+
 filepath='/Users/joe/Desktop/videos'
 outpath='/Users/joe/Desktop/BU_19_Spring/EC500/output-video'
 
@@ -16,8 +19,9 @@ def file_input(filepath):
 		q.put(file)
 	return q
 
-def ffmpeg_convert_720p(q,filepath):
-	index=0
+def ffmpeg_convert_720p(filepath):
+	q=file_input(filepath)
+	global index
 	while not q.empty():
 		video = q.get()
 		video_720p = "ffmpeg -i "+filepath+"/"+video+" -s hd720 -b:v 2M -r 30 "+outpath+"/"+video[:-4]+"720.mp4"
@@ -27,8 +31,9 @@ def ffmpeg_convert_720p(q,filepath):
 		time.sleep(1)
 	print('All videos converted to 720p!')
 
-def ffmpeg_convert_480p(q,filepath):
-	idx=0
+def ffmpeg_convert_480p(filepath):
+	global idx
+	q=file_input(filepath)
 	while not q.empty():
 		video = q.get()
 		video_480p = "ffmpeg -i "+filepath+"/"+video+" -s hd480 -b:v 1M -r 30 "+outpath+"/"+video[:-4]+"480.mp4"
@@ -40,15 +45,18 @@ def ffmpeg_convert_480p(q,filepath):
 
 def main():
 	start=time.clock()
-	q=file_input(filepath)
-	t1=threading.Thread(target=ffmpeg_convert_720p,args=(q,filepath))
+
+	t1=threading.Thread(target=ffmpeg_convert_720p,args=(filepath))
 	t1.start
-	t2=threading.Thread(target=ffmpeg_convert_480p,args=(q,filepath))
+
+	t2=threading.Thread(target=ffmpeg_convert_480p,args=(filepath))
 	t2.start
 
-	#t1.join()
-	#t2.join()
+	#ffmpeg_convert_720p(filepath)
+	#ffmpeg_convert_480p(filepath)
 
+	#print(index)
+	#print(idx)
 	consume=time.clock()-start
 	print("Time used:",consume)
 
