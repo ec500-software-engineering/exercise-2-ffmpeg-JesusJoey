@@ -16,7 +16,7 @@ def file_input(filepath):
 		q.put(file)
 	return q
 
-def ffmpeg_convert_720p(queue,filepath):
+def ffmpeg_convert_720p(q,filepath):
 	index=0
 	while not q.empty():
 		video = q.get()
@@ -27,7 +27,7 @@ def ffmpeg_convert_720p(queue,filepath):
 		time.sleep(1)
 	print('All videos converted to 720p!')
 
-def ffmpeg_convert_480p(queue,filepath):
+def ffmpeg_convert_480p(q,filepath):
 	idx=0
 	while not q.empty():
 		video = q.get()
