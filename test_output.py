@@ -1,17 +1,20 @@
-import subprocess
-import pytest
-import json
-import os
+import main
+from math import isclose
+def test_duration():
+    fnin = 'video.mp4'
+    fnout1 = 'video_480p.mp4'
+    fnout2 = 'video_720p.mp4'
 
-def test_one(self):
-    while not (os.path.exists('./output-video/IMG_0753.480.mp4')):
-        pass
-    info_in = subprocess.check_output(['ffprobe', '-v', 'warning', '-print_format', 'json', '-show_streams',
-                                           '-show_format', './output-video/IMG_0753.480.mp']) 
-    info_in = json.loads(info_in)
-    info_out = subprocess.check_output(['ffprobe', '-v', 'warning', '-print_format', 'json', '-show_streams',
-                                            '-show_format', './output-video/IMG_0753.480.mp'])
-    info_out = json.loads(info_out)
-    orig_duration = float(info_in['streams'][0]['duration'])  
-    new_duration = float(info_out['streams'][0]['duration'])
-    assert orig_duration == new_duration
+    orig_meta = main.ffprobe(fnin)
+    orig_duration = float(orig_meta['streams'][0]['duration'])
+    test = main.MyProcess()
+    test.convert()
+    meta_480 = main.ffprobe(fnout1)
+    meta_720 = main.ffprobe(fnout2)
+    duration_480 = float(meta_480['streams'][0]['duration'])
+    duration_720 = float(meta_720['streams'][0]['duration'])
+    assert isclose(orig_duration, duration_480, abs_tol=1)
+    assert isclose(orig_duration, duration_720, abs_tol=1)
+    print('all successful!')
+
+test_duration()
