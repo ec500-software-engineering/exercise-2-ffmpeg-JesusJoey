@@ -1,6 +1,14 @@
 import main
 from math import isclose
-import ffprobe
+
+def ffprobe(file_name)->dict:
+    """ get media metadata """
+    meta = subprocess.check_output(['ffprobe', '-v', 'warning',
+                                    '-print_format', 'json',
+                                    '-show_streams',
+                                    '-show_format',
+                                    file_name])
+    return json.loads(meta)
 
 def test_duration():
     fnin = 'video.mp4'
