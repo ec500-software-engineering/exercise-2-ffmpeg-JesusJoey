@@ -1,5 +1,7 @@
 import main
 from math import isclose
+import ffprobe
+
 def test_duration():
     fnin = 'video.mp4'
     fnout1 = 'video_480p.mp4'
