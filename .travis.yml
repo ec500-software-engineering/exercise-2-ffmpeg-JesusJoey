@@ -13,7 +13,7 @@ addons:
   apt:
     packages: ffmpeg
 
-install: pip install -e .
+install: pip install -r requirements.txt
 
 
 script:
